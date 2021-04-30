@@ -21,6 +21,7 @@ class Lienzo(p:MainActivity): View(p) {
     var puntuacion=0
     var contacto=0
     var golpe=false
+    var nivel =1
     var topo1 = Imagen(this, R.drawable.topo, 180f, 460f)
     var topo2 = Imagen(this, R.drawable.topo, 580f, 460f)
     var topo3 = Imagen(this, R.drawable.topo, 980f, 460f)
@@ -82,76 +83,76 @@ class Lienzo(p:MainActivity): View(p) {
 
         when (valor) {
             1 -> {
-                if (golpe == false) {
+                if (golpe == false &&  contador<=60) {
                     topo1.pintar(c)
-                } else {
+                } else if(golpe == true &&  contador<=60){
                     topog1.pintar(c)
                 }
                 contacto = 1
             }
             2 -> {
-                if (golpe == false) {
+                if (golpe == false&&  contador<=60) {
                     topo2.pintar(c)
-                } else {
+                } else if(golpe == true &&  contador<=60){
                     topog2.pintar(c)
                 }
                 contacto = 2
 
             }
             3 -> {
-                if (golpe == false) {
+                if (golpe == false&& contador<=60) {
                     topo3.pintar(c)
-                } else {
+                } else if(golpe == true &&  contador<=60){
                     topog3.pintar(c)
                 }
                 contacto = 3
 
             }
             4 -> {
-                if (golpe == false) {
+                if (golpe == false&& contador<=60) {
                     topo4.pintar(c)
-                } else {
+                } else if(golpe == true &&  contador<=60){
                     topog4.pintar(c)
                 }
                 contacto = 4
 
             }
             5 -> {
-                if (golpe == false) {
+                if (golpe == false&&  contador<=60) {
                     topo5.pintar(c)
-                } else {
+                } else if(golpe == true &&  contador<=60){
                     topog5.pintar(c)
                 }
                 contacto = 5
             }
             6 -> {
-                if (golpe == false) {
+                if (golpe == false&&  contador<=60) {
                     topo6.pintar(c)
-                } else {
+                } else if(golpe == true &&  contador<=60){
                     topog6.pintar(c)
                 }
                 contacto = 6
             }
             7 -> {
-                if (golpe == false) {
+                if (golpe == false&& contador<=60) {
                     topo7.pintar(c)
-                } else {
+                } else if(golpe == true &&  contador<=60){
                     topog7.pintar(c)
                 }
                 contacto = 7
             }
             8 -> {
-                if (golpe == false) {
+                if (golpe == false&&  contador<=60) {
                     topo8.pintar(c)
-                } else {
+                } else if(golpe == true &&  contador<=60){
                     topog8.pintar(c)
                 }
                 contacto = 8
             }
             9 -> {
-                if (golpe == false) {
+                if (golpe == false&& contador<=60) {
                     topo9.pintar(c)
-                } else {
+                } else if(golpe == true &&  contador<=60){
                     topog9.pintar(c)
                 }
                 contacto = 9
@@ -159,16 +160,33 @@ class Lienzo(p:MainActivity): View(p) {
         }
 
 
-        if (puntuacion == 50) {
+        if (puntuacion == 50&& nivel==1) {
+           nivel=2
+            contador=65
+            puntuacion=0
+
+
+        }
+        if (puntuacion == 28&& nivel==2) {
+            nivel=3
+            contador=70
+            puntuacion=0
+
+        }
+        if (puntuacion == 15&& nivel==3) {
             pausa = true
             puntuacion = 0
             pos=2
+            nivel=1
+            contador=75
 
         }
-        if (contador == 0) {
+        if (contador <= 0) {
             pausa = true
             puntuacion = 0
             pos=3
+            nivel=1
+            contador=65
 
         }
 
@@ -178,6 +196,10 @@ class Lienzo(p:MainActivity): View(p) {
         c.drawText("puntuacion: ${puntuacion}", 50f, 50f, p)
         p.textSize = 39f
         c.drawText("tiempo: ${contador}", 1000f, 50f, p)
+        p.textSize = 39f
+        c.drawText("Nivel: ${nivel}", 1500f, 50f, p)
+        c.drawText("valor: ${valor}", 1800f, 50f, p)
+
     }
             2->{
                 p.textSize = 100f
@@ -217,12 +239,12 @@ class Lienzo(p:MainActivity): View(p) {
             MotionEvent.ACTION_DOWN -> {
                 if (tocar.estaEnArea(event.x, event.y)&&pos==0) {
                    pos=1
-                    contador=60
+                    contador=65
                     puntuacion=0
                 }
                 if (tocar.estaEnArea(event.x, event.y)&&pos==2) {
                     pos=1
-                    contador=60
+                    contador=65
                     pausa=false
                     puntuacion=0
 
@@ -230,7 +252,7 @@ class Lienzo(p:MainActivity): View(p) {
                 }
                 if (tocar.estaEnArea(event.x, event.y)&&pos==3) {
                     pos=1
-                    contador=60
+                    contador=65
                     pausa=false
                     puntuacion=0
 
@@ -283,93 +305,27 @@ class Lienzo(p:MainActivity): View(p) {
     class Imagen(l:Lienzo, im:Int,posx:Float,posy:Float) {
         var x = posx
         var y = posy
-        var imagen = BitmapFactory.decodeResource(l.resources,im)
+        var imagen = BitmapFactory.decodeResource(l.resources, im)
         var invisible = false
 
-        fun pintar(c:Canvas){
+        fun pintar(c: Canvas) {
             if (invisible) return
-            c.drawBitmap(imagen,x,y, Paint())
+            c.drawBitmap(imagen, x, y, Paint())
         }
 
-        fun estaEnArea(toqueX:Float,toqueY:Float):Boolean{
-            var x2 = x+imagen.width
-            var y2 = y+imagen.height
+        fun estaEnArea(toqueX: Float, toqueY: Float): Boolean {
+            var x2 = x + imagen.width
+            var y2 = y + imagen.height
 
-            if (toqueX >= x && toqueX <= x2){
-                if (toqueY >= y && toqueY <= y2){
+            if (toqueX >= x && toqueX <= x2) {
+                if (toqueY >= y && toqueY <= y2) {
                     return true
                 }
             }
             return false
         }//estaArea
-
-
-
-
-    }
-    fun area(x: Float, y: Float, x1: Float, y1: Float): Boolean {
-        if ((x1 >= x && x1 <= (x + 175)) && (y1 >= y && y1 <= (y + 175))) {
-            return true
-        }
-
-        return false
     }
 
-    /* override fun onTouchEvent(event: MotionEvent): Boolean {
-        //ejercicio  pequeñas
-        // la primera la vas a mover en coordenada x, y va a rebotar de un lado a otro
-        //la segunda su mueve en el dedo
-        //event.action //tipo de touch precionado, arrastre y liberar
-        //event.x  o y  es el punto de toque en la pantalla
-
-
-       when (event.action) {
-            MotionEvent.ACTION_DOWN->
-            {
-                imagenes=0
-                if (area(posX,posY,event.x,event.y)) {
-                    imagenes=1
-                }
-                if (area(posX2,posY2,event.x,event.y)) {
-                    imagenes=2
-                }
-                if (area(contador.toFloat(),posY2,event.x,event.y)) {
-                    imagenes=2
-                }
-            }
-            MotionEvent.ACTION_MOVE -> {
-                if (imagenes==1) {
-                    posX = event.x
-                    posY = event.y
-                }
-                if (imagenes==2) {
-                    aux = 2
-                    posX2 = event.x
-                    posY2=event.y
-                    contador = posX2.toInt() + 50
-                }
-
-                try {
-                    hilo.start()
-
-                } catch (e: Exception) {
-
-                }
-
-            }
-
-            MotionEvent.ACTION_UP -> {
-
-
-            }
-
-        }
-        return true
-
-    }
-
-}
-*/
 
     class Hilo(p: Lienzo) : Thread() {
         var puntero = p//Existe solo en esta linea.
@@ -382,10 +338,27 @@ class Lienzo(p:MainActivity): View(p) {
                 puntero.run {
                     if (true) {
                         while (pausa==false) {
-                            sleep(1000)
-                            contador--
-                            golpe=false
-                            valor=r.nextInt(11 - 1)
+                            when(nivel){
+                               1->{
+                                   sleep(1000)
+                                   contador--
+                                   golpe=false
+                                   valor=r.nextInt(11 - 2)+1
+                               }
+                                2->{
+                                    sleep(700)
+                                    contador=contador-2
+                                    golpe=false
+                                    valor=r.nextInt(11 - 2)+1
+                                }
+                                3->{
+                                    sleep(500)
+                                    contador=contador-3
+                                    golpe=false
+                                    valor=r.nextInt(11 - 2)+1
+                                }
+                            }
+
                         }
 
 
